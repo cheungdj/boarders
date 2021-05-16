@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const path = require('path');
+const mate = require('ejs-mate')
 const Spots = require('./models/spots');
 const methodOverride = require('method-override');
 
@@ -20,6 +21,7 @@ db.once("open",() => {
 })
 
 //Set view engine as ejs, so express knows we are using ejs files for views
+app.engine('ejs', mate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended:true}));
@@ -69,7 +71,7 @@ app.put('/spots/:id', async(req,res) =>{
 
 app.delete('/spots/:id', async(req, res) => { 
     const {id} = req.params;
-    Spots.findByIdAndDelete(id);
+    await Spots.findByIdAndDelete(id);
     res.redirect('/spots')
 })
 

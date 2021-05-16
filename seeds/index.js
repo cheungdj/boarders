@@ -23,7 +23,8 @@ const seedDb = async () => {
     for (let i = 0; i < 50; i++){
         const Spot = new Spots({
             title: `${sample(adjective)} ${sample(component)}`,
-            location:'Toronto'
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer erat ipsum, sagittis a enim a, tempus elementum elit. Phasellus a augue ac nibh aliquam eleifend. Etiam at elit ac sem.',
+            location: 'Toronto'
         })
         await Spot.save();
     }

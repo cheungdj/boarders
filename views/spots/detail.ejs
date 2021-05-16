@@ -1,17 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to <%=spots._id%> </title>
-</head>
-<body>
+<% layout('./layouts/boilerplate')  %> 
     <h1><%= spots.title %> </h1>
+    <h2><%= spots.description %>  </h2>
     <a href="/spots">All Spots 🛹</a>
     <a href="/spots/<%= spots._id %>/edit ">Edit Spot</a>
     <form action="/spots/<%= spots._id %>/?_method=DELETE" method="POST">
         <button>Delete</button>
     </form>
-</body>
-</html>
