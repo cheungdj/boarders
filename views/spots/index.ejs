@@ -1,8 +1,22 @@
 <% layout('./layouts/boilerplate')  %> 
-    <h1>All Spots 🛹</h1>
-    <a href="/spots/newSpot">Add New Spot</a>
+    <h1 class="text-center">All Spots 🛹</h1>
+    <a href="/spots/newSpot" class="btn btn-success">Add New Spot</a>
     <ul>
         <% for (let spot of spots) {%>
-            <li><a href="spots/<%=spot._id %>"><%= spot.title %></a></li>
+            <div class="card mb-3 mt-3" style="max-width: 50%;">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="..." alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title"><%= spot.title %> </h5>
+                      <p class="card-text"><%= spot.description %> </p>
+                      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                      <a href="spots/<%=spot._id %>"<%= spot.title %> class="btn btn-dark">Check out <%= spot.title %> </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
         <% } %> 
     </ul>

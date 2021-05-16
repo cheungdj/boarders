@@ -7,7 +7,8 @@ const SpotsSchema = new Schema({
         required: true
     },
     description:String,
-    location:String
+    location:String,
+    image:String
 });
 
 module.exports = mongoose.model('Spots', SpotsSchema);
