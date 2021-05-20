@@ -1,24 +1,33 @@
 <% layout('./layouts/boilerplate')  %> 
-<a class="btn btn-dark" href="/spots" role="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-  </svg>
+<a class="btn btn-dark" href="/spots" role="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+</svg>
 </a>
     <div class="container">
         <h1 class="text-center">Create a New Spot</h1>
         <div class="row">
-            <form action="/spots/newSpot" method="POST">
+            <form class="needs-validation" action="/spots/newSpot" method="POST" novalidate>
                 <div class="mb-3">
                   <label for="title" class="form-label">Title</label>
-                  <input type="text" class="form-control" id="title" name="spots[title]">
+                  <input type="text" class="form-control" id="title" name="spots[title]" required>
                   <div id="titleHelp" class="form-text">Name it something descriptive!</div>
+                  <div class="valid-feedback">
+                    Looks good!
+                  </div>              
                 </div>
                 <div class="mb-3">
                     <label for="location" class="form-label">Location</label>
-                    <input type="text" class="form-control" id="location" name="spots[location]">
+                    <input type="text" class="form-control" id="location" name="spots[location]" required>
+                    <div class="valid-feedback">
+                      Looks good!
+                    </div>                
                   </div>
                 <div class="input-group">
                   <span class="input-group-text">Description</span>
-                  <textarea class="form-control" id="description" name="spots[description]"></textarea>
+                  <textarea class="form-control" id="description" name="spots[description]" required></textarea>
+                  <div class="valid-feedback">
+                    Looks good!
+                  </div>              
                 </div>
 
                 <button type="submit" class="btn btn-success mt-3">Submit</button>
