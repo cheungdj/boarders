@@ -6,6 +6,9 @@ const mate = require('ejs-mate')
 const Spots = require('./models/spots');
 const methodOverride = require('method-override');
 const AsyncHandle = require('./utils/AsyncHandler');
+const ExpressError = require('./utils/ExpressError');
+const {spotSchemaValidate} = require('./utils/validateSchema.js');
+
 //Connecting mongoose to mongoDB
 mongoose.connect('mongodb://localhost:27017/darkslide-spots',{
     useNewUrlParser:true,
@@ -27,6 +30,17 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
 
+//Validate spot schema using Joi vaidation
+const validateSpot = (req, res, next) =>{
+    const {error} = spotSchemaValidate.validate(req.body);
+    if(error){
+        const msg = error.details.map(e => e.message).join(',');
+        throw new ExpressError(msg, 400);
+    }
+    else{
+        next();
+    }
+}
 
 //GET request for home @url/
 app.get('/', (req, res)=>{
@@ -39,7 +53,10 @@ app.get('/spots/newSpot', AsyncHandle(async (req,res)=>{
 }));
 
 //POST request for new spot form, redirects to new spot detail page on send
-app.post('/spots/newSpot', AsyncHandle(async(req, res) => {
+app.post('/spots/newSpot', validateSpot, AsyncHandle(async(req, res) => {
+    if(!req.body.spots){
+        throw new ExpressError('Invalid data', 400);
+    }
     const spot = new Spots (req.body.spots);
     await spot.save();
     res.redirect(`/spots/${spot._id}`);
@@ -54,6 +71,9 @@ app.get('/spots', AsyncHandle(async(req, res)=>{
 //GET request for specific spot ID in database, renders show page for requested ID
 app.get('/spots/:id', AsyncHandle(async(req, res) =>{
     const spots = await Spots.findById(req.params.id);
+    if(!spots){
+        throw new ExpressError("We ain't got that spot round here", 404);
+    }
     res.render('spots/detail', {spots});
 }));
 
@@ -76,9 +96,17 @@ app.delete('/spots/:id', AsyncHandle(async(req, res) => {
     res.redirect('/spots')
 }));
 
-app.use((err, req, res, next)=>{
-    res.send("Something went wrong.")
+app.all('*', (req, res, next) =>{
+    next(new ExpressError('Page Not Found', 404));
 })
+
+app.use((err, req, res, next)=>{
+    const {statusCode = 500, message = 'Oops, something went wrong.'} = err;
+    if(!err.message){
+        err.message = "Something went wrong."
+    }
+    res.status(statusCode).render('error', {err});
+}) 
 
 //Catch for GET request if no route has been made yet
 app.get('*', (req,res) =>{ res.send('We are still working on this part of the site.') })
