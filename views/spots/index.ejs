@@ -1,22 +1,29 @@
 <% layout('./layouts/boilerplate')  %> 
-    <h1 class="text-center">All Spots 🛹</h1>
-    <a href="/spots/newSpot" class="btn btn-success">Add New Spot</a>
-    <ul>
-        <% for (let spot of spots) {%>
-            <div class="card mb-3 mt-3" style="max-width: 50%;">
-                <div class="row g-0">
-                  <div class="col-md-4">
-                    <img src="..." alt="...">
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body">
-                      <h5 class="card-title"><%= spot.title %> </h5>
-                      <p class="card-text"><%= spot.description %> </p>
-                      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                      <a href="spots/<%=spot._id %>"<%= spot.title %> class="btn btn-dark">Check out <%= spot.title %> </a>
+    <h1 class="text-center">All Spots</h1>
+    <div class="container">
+      <div class="text-center">
+        <a href="/spots/newSpot" class="btn btn-success">Add New Spot</a>
+      </div>
+      <div class="d-flex flex-row justify-content-center mt-4">
+        <ul>
+          <% for (let spot of spots) {%>
+              <div class="card mb-3 mt-3" style="max-width: 100%;">
+                  <div class="row g-0">
+                    <div class="col-md-4">
+                      <img src="<%= spot.image %> " alt="image" class="img-fluid">
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <h5 class="card-title"><%= spot.title %> </h5>
+                        <p class="card-text"><%= spot.description %> </p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        <a href="spots/<%=spot._id %>"<%= spot.title %> class="btn btn-dark">Check out <%= spot.title %> </a>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-        <% } %> 
-    </ul>
+          <% } %> 
+      </ul>
+      </div>
+    </div>
+    
