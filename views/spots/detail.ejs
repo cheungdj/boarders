@@ -21,4 +21,30 @@
       </form>
       </div>
     </div>
+
+      <div class="row">
+        <div class="col-6 offset-3" style="width: 100%;">
+            <h3 class="text-center mt-3">Leave a Review</h3>
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Reviews</button>
+        <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Reviews</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <p>What do you think about <%= spots.title %>?</p>
+            <form class="needs-validation" action="/spots/<%= spots._id %>/reviews" method="POST" novalidate >
+            <div class="input-group">
+              <label for="rating" class="form-label">Rating</label>
+              <input type="range" class="form-range" min="0" max="5" step="0.5" id="rating" name="review[rating]">
+            </div>
+            <div class="form-floating mt-3">
+              <textarea class="form-control" placeholder="Leave a comment here" id="comment" name="review[body]"style="height: 100px" required></textarea>
+              <label for="comment">Comment</label>
+            </div>
+            <button class="btn btn-success mt-3">Review</button>       
+          </form>
+          </div>
+        </div>
+      </div>
   </div>

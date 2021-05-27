@@ -25,7 +25,7 @@ const seedDb = async () => {
             title: `${sample(adjective)} ${sample(component)}`,
             description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer erat ipsum, sagittis a enim a, tempus elementum elit. Phasellus a augue ac nibh aliquam eleifend. Etiam at elit ac sem.',
             location: 'Toronto',
-            image:'https://source.unsplash.com/random'
+            image:'https://source.unsplash.com/collection/2078238/600x400'
         })
         await Spot.save();
     }

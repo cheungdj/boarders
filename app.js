@@ -7,7 +7,8 @@ const Spots = require('./models/spots');
 const methodOverride = require('method-override');
 const AsyncHandle = require('./utils/AsyncHandler');
 const ExpressError = require('./utils/ExpressError');
-const {spotSchemaValidate} = require('./utils/validateSchema.js');
+const {spotSchemaValidate, reviewSchemaValidate} = require('./utils/validateSchema.js');
+const Review = require('./models/review');
 
 //Connecting mongoose to mongoDB
 mongoose.connect('mongodb://localhost:27017/darkslide-spots',{
@@ -33,6 +34,17 @@ app.use(methodOverride('_method'));
 //Validate spot schema using Joi vaidation
 const validateSpot = (req, res, next) =>{
     const {error} = spotSchemaValidate.validate(req.body);
+    if(error){
+        const msg = error.details.map(e => e.message).join(',');
+        throw new ExpressError(msg, 400);
+    }
+    else{
+        next();
+    }
+}
+
+const validateReview = (req, res, next) => {
+    const {error} = reviewSchemaValidate.validate(req.body);
     if(error){
         const msg = error.details.map(e => e.message).join(',');
         throw new ExpressError(msg, 400);
@@ -77,12 +89,24 @@ app.get('/spots/:id', AsyncHandle(async(req, res) =>{
     res.render('spots/detail', {spots});
 }));
 
+app.post('/spots/:id/reviews', validateReview,AsyncHandle(async(req,res) =>{
+    const spots = await Spots.findById(req.params.id);
+    if(!req.body.review){
+        throw new ExpressError('Invalid data', 400);
+    }
+    const review = new Review(req.body.review);
+    spots.reviews.push(review);
+    await Promise.all([    spots.save(), review.save()]);
+    res.redirect(`/spots/${spots._id}`);
+}))
+
 //GET request to edit spot of requested ID
 app.get('/spots/:id/edit', AsyncHandle(async(req, res) =>{
     const spots = await Spots.findById(req.params.id);
     res.render('spots/edit', {spots});
 }));
 
+//PUT request to update spot with new information (used with edit page)
 app.put('/spots/:id', AsyncHandle(async(req,res) =>{
     const {id} = req.params;
     const spots = await Spots.findByIdAndUpdate(id, {...req.body.spots});
@@ -90,16 +114,19 @@ app.put('/spots/:id', AsyncHandle(async(req,res) =>{
 
 }));
 
+//Route to delete specific spot
 app.delete('/spots/:id', AsyncHandle(async(req, res) => { 
     const {id} = req.params;
     await Spots.findByIdAndDelete(id);
     res.redirect('/spots')
 }));
 
+//Route for pages that do not exist
 app.all('*', (req, res, next) =>{
     next(new ExpressError('Page Not Found', 404));
 })
 
+//Final error catch, defaults to 500 error code if no error was provided 
 app.use((err, req, res, next)=>{
     const {statusCode = 500, message = 'Oops, something went wrong.'} = err;
     if(!err.message){
