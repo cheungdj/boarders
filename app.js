@@ -82,13 +82,14 @@ app.get('/spots', AsyncHandle(async(req, res)=>{
 
 //GET request for specific spot ID in database, renders show page for requested ID
 app.get('/spots/:id', AsyncHandle(async(req, res) =>{
-    const spots = await Spots.findById(req.params.id);
+    const spots = await Spots.findById(req.params.id).populate('reviews');
     if(!spots){
         throw new ExpressError("We ain't got that spot round here", 404);
     }
     res.render('spots/detail', {spots});
 }));
 
+//Route to POST new reviews for a spot
 app.post('/spots/:id/reviews', validateReview,AsyncHandle(async(req,res) =>{
     const spots = await Spots.findById(req.params.id);
     if(!req.body.review){
@@ -112,6 +113,14 @@ app.put('/spots/:id', AsyncHandle(async(req,res) =>{
     const spots = await Spots.findByIdAndUpdate(id, {...req.body.spots});
     res.redirect(`/spots/${spots._id}`);
 
+}));
+
+//Route to delete review for specific spot ID
+app.delete('/spots/:id/reviews/:reviewID', AsyncHandle(async(req,res) =>{
+    const {id, reviewID} = req.params;
+    await Spots.findByIdAndUpdate(id, {$pull: {reviews: reviewID} });
+    await Review.findByIdAndDelete(reviewID);
+    res.redirect(`/spots/${id}`)
 }));
 
 //Route to delete specific spot

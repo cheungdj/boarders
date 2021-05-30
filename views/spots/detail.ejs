@@ -44,6 +44,27 @@
             </div>
             <button class="btn btn-success mt-3">Review</button>       
           </form>
+          <% for(let review of spots.reviews){ %>
+          <div class="my-3">
+            <div class="card">
+              <div class="card-header">
+                Review
+              </div>
+              <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                  <% for(i = 0; i < review.rating; i++){ %>
+                    <span>🔥</span>
+                  <% } %> 
+                  <p><%= review.body %> </p>
+                  <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
+                  <form action="/spots/<%= spots._id %>/reviews/<%= review._id %>/?_method=DELETE" method="POST">
+                    <button class="btn btn-sm btn-danger mt-3">Delete</button>   
+                  </form>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+          <% } %>
           </div>
         </div>
       </div>
